@@ -46,7 +46,7 @@
                 Console.Write("C:\\Users\\luis\\Downloads\\teste CSHARP\\MeuProjeto>(--help or /? for help): ");
                 string written = Console.ReadLine() ?? string.Empty;
                 var parts = written.Split(' ');
-                if (parts[0].ToUpper() == "CREATE" && parts.Length == 3 && int.TryParse(parts[2], out int initialValue))
+                if (string.Equals(parts[0].ToUpper(), "CREATE") && parts.Length == 3 && int.TryParse(parts[2], out int initialValue))
                 {   
                     if(string.IsNullOrEmpty(parts[1]))
                     {
@@ -57,7 +57,7 @@
                     lista.Add(variable);
                     Console.WriteLine($"Variable created with initial value {initialValue} at index {lista.Count - 1}");
                 }
-                else if (parts[0].ToUpper() == "GET_BY_NAME" && parts.Length == 2)
+                else if (string.Equals(parts[0].ToUpper(), "GET_BY_NAME") && parts.Length == 2)
                 {
                     if  (SystemOperations.GetVariableAtIndex(lista, lista.FindIndex(v => v.GetName() == parts[1])) is Variable foundVarByName)
                     {
@@ -68,7 +68,7 @@
                         Console.WriteLine("Variable not found.");
                     }
                 }
-                else if (parts[0].ToUpper() == "GET_BY_INDEX" && parts.Length == 2 && int.TryParse(parts[1], out int getIndex))
+                else if (string.Equals(parts[0].ToUpper(), "GET_BY_INDEX") && parts.Length == 2 && int.TryParse(parts[1], out int getIndex))
                 {
                     if   (SystemOperations.GetVariableAtIndex(lista, getIndex) is Variable foundVar)
                     {
@@ -79,7 +79,7 @@
                         Console.WriteLine("Variable not found at the specified index.");
                     }
                 }
-                else if(parts[0].ToUpper() == "--help" || parts[0].ToUpper() == "/?")
+                else if(string.Equals(parts[0].ToUpper(), "--help") || string.Equals(parts[0].ToUpper(), "/?"))
                 {
                     Console.WriteLine(SystemOperations.Help());
                 }
