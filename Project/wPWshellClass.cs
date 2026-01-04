@@ -18,12 +18,21 @@ namespace Project
             return _value;
         }
         public void ChangeValue(int newValue)
-        {
+        {   
             _value = newValue;
         }
         public void SumValue(int addValue)
-        {
+        {  
             _value += addValue;
+        }
+        public string? SumValueRefered(Variable variable)
+        {  
+            if (variable == null)
+            {
+                return null;
+            }
+            _value += variable.GetValue();
+            return "operation sucessfully done";
         }
         public void SubtractValue(int subValue)
         {
@@ -40,6 +49,8 @@ namespace Project
                 _value /= divValue;
             }
         }
+
+
 
     } 
 

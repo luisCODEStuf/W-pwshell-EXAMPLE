@@ -20,7 +20,8 @@
                    "SUM <name> <value> - Add the specified value to the variable with the specified name.\n" +
                    "SUBTRACT <name> <value> - Subtract the specified value from the variable with the specified name.\n" +
                    "MULTIPLY <name> <value> - Multiply the variable with the specified name by the specified value.\n" +
-                   "DIVIDE <name> <value> - Divide the variable with the specified name by the specified value.";
+                   "DIVIDE <name> <value> - Divide the variable with the specified name by the specified value.\n"+
+                   "SHOW_LIST - Display all variables in the list.\n";
         }
         public static Variable? GetVariableAtIndex(List<Variable> lista, int index)
         {   
@@ -83,6 +84,20 @@
                 {
                     Console.WriteLine(SystemOperations.Help());
                 }
+                else if (string.Equals(parts[0].ToUpper(), "SHOW_LIST") && parts.Length == 1)
+                {
+                    if (lista.Count == 0)
+                    {
+                        Console.WriteLine("No variables in the list.");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < lista.Count; i++)
+                        {
+                            Console.WriteLine($"Index: {i}, Name: {lista[i].GetName()}, Value: {lista[i].GetValue()}");
+                        }
+                    }
+                }
                 else if (parts.Length == 3 && int.TryParse(parts[2], out int value))
                 {   
                     int index = SystemOperations.GetVariableByName(lista, parts[1]);
@@ -127,6 +142,33 @@
                         Console.WriteLine("Invalid index.");
                     }
                 }
+                 else if (string.Equals(parts[0].ToUpper(),"SUM", StringComparison.OrdinalIgnoreCase) && string.Equals(parts[1],"-r", StringComparison.OrdinalIgnoreCase))
+                    {   
+                        if(parts.Length == 4)
+                        {
+
+                        int FIRSTindex = SystemOperations.GetVariableByName(lista, parts[2]);
+                        int SECONDindex = SystemOperations.GetVariableByName(lista, parts[3]);
+                        if (FIRSTindex != -1 && SECONDindex != -1)
+                        {
+                            string? result = lista[FIRSTindex].SumValueRefered(lista[SECONDindex]);
+                            if (result == null)
+                            {
+                                Console.WriteLine("Error: Variable not found.");
+                            }
+                            else
+                            {
+                                Console.WriteLine(result);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid index.");
+                                Console.WriteLine("Error: Variable not found.");
+                        }
+                        }
+                        
+                    }
                 else
                 {
                     Console.WriteLine("Invalid command or parameters.");
