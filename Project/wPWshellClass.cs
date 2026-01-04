@@ -38,9 +38,27 @@ namespace Project
         {
             _value -= subValue;
         }
+        public string? SubtractValueRefered(Variable variable)
+        {  
+            if (variable == null)
+            {
+                return null;
+            }
+            _value -= variable.GetValue();
+            return "operation sucessfully done";
+        }
         public void MultiplyValue(int mulValue)
         {
             _value *= mulValue;
+        }
+        public string? MultiplyValueRefered(Variable variable)
+        {  
+            if (variable == null)
+            {
+                return null;
+            }
+            _value *= variable.GetValue();
+            return "operation sucessfully done";
         }
         public void DivideValue(int divValue)
         {
@@ -49,7 +67,15 @@ namespace Project
                 _value /= divValue;
             }
         }
-
+        public string? DivideValueRefered(Variable variable)
+        {  
+            if (variable == null || variable.GetValue() == 0)
+            {
+                return null;
+            }
+            _value /=variable.GetValue();
+            return "operation sucessfully done";
+        }
 
 
     } 

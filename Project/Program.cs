@@ -2,13 +2,18 @@
 {
     public class SystemOperations
     {   
-        public static Variable? ShowList(List<Variable> Lista) 
-        {
-            foreach (var variable in Lista)
+        public static string? ShowList(List<Variable> lista) 
+        {   
+            if(lista == null)
             {
-                return variable;
+                return null;
             }
-            return null;
+            string result = "results: \n";
+            foreach (var variable in lista)
+            {
+                result += $"-----\n name: {variable.GetName()}\n value: {variable.GetValue()}\n index: {lista.IndexOf(variable)}\n-----\n";
+            }
+            return result;
         }
         public static string Help()
         {
@@ -84,7 +89,7 @@
                 {
                     Console.WriteLine(SystemOperations.Help());
                 }
-                else if (string.Equals(parts[0].ToUpper(), "SHOW_LIST") && parts.Length == 1)
+                else if (string.Equals(parts[0].ToUpper(), "SHOW_LIST", StringComparison.OrdinalIgnoreCase) && parts.Length == 1)
                 {
                     if (lista.Count == 0)
                     {
@@ -92,84 +97,98 @@
                     }
                     else
                     {
-                        for (int i = 0; i < lista.Count; i++)
-                        {
-                            Console.WriteLine($"Index: {i}, Name: {lista[i].GetName()}, Value: {lista[i].GetValue()}");
-                        }
+                        Console.WriteLine(SystemOperations.ShowList(lista: lista));
                     }
                 }
-                else if (parts.Length == 3 && int.TryParse(parts[2], out int value))
+                else if (parts.Length == 3 || parts.Length == 4)
                 {   
-                    int index = SystemOperations.GetVariableByName(lista, parts[1]);
-                    if (index != -1)
+                    if(parts.Length == 3 && int.TryParse(parts[2], out int value))
                     {
-                        switch (parts[0].ToUpper())
+                        int index = SystemOperations.GetVariableByName(lista, parts[1]);
+                        if (index != -1)
                         {
-                            case "CHANGE":
-                                lista[index].ChangeValue(value);
-                                Console.WriteLine($"Value at index {index} changed to {value}");
-                                break;
-                            case "SUM":
-                                lista[index].SumValue(value);
-                                Console.WriteLine($"Value at index {index} increased by {value}");
-                                break;
-                            case "SUBTRACT":
-                                lista[index].SubtractValue(value);
-                                Console.WriteLine($"Value at index {index} decreased by {value}");
-                                break;
-                            case "MULTIPLY":
-                                lista[index].MultiplyValue(value);
-                                Console.WriteLine($"Value at index {index} multiplied by {value}");
-                                break;
-                            case "DIVIDE":
-                                if (value != 0)
-                                {
-                                    lista[index].DivideValue(value);
-                                    Console.WriteLine($"Value at index {index} divided by {value}");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Cannot divide by zero.");
-                                }
-                                break;
-                            default:
-                                Console.WriteLine("Unknown command.");
-                                break;
+                            switch (parts[0].ToUpper())
+                            {
+                                case "CHANGE":
+                                    lista[index].ChangeValue(value);
+                                    Console.WriteLine($"Value at index {index} changed to {value}");
+                                    break;
+                                case "SUM":
+                                    lista[index].SumValue(value);
+                                    Console.WriteLine($"Value at index {index} increased by {value}");
+                                    break;
+                                case "SUBTRACT":
+                                    lista[index].SubtractValue(value);
+                                    Console.WriteLine($"Value at index {index} decreased by {value}");
+                                    break;
+                                case "MULTIPLY":
+                                    lista[index].MultiplyValue(value);
+                                    Console.WriteLine($"Value at index {index} multiplied by {value}");
+                                    break;
+                                case "DIVIDE":
+                                    if (value != 0)
+                                    {
+                                        lista[index].DivideValue(value);
+                                        Console.WriteLine($"Value at index {index} divided by {value}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Cannot divide by zero.");
+                                    }
+                                    break;
+                                default:
+                                    Console.WriteLine("Unknown command.");
+                                    break;
+                            }
                         }
                     }
-                    else
+                    if (parts.Length == 4 && parts[1].Equals("-r", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        Console.WriteLine("Invalid index.");
-                    }
-                }
-                 else if (string.Equals(parts[0].ToUpper(),"SUM", StringComparison.OrdinalIgnoreCase) && string.Equals(parts[1],"-r", StringComparison.OrdinalIgnoreCase))
-                    {   
-                        if(parts.Length == 4)
-                        {
-
                         int FIRSTindex = SystemOperations.GetVariableByName(lista, parts[2]);
                         int SECONDindex = SystemOperations.GetVariableByName(lista, parts[3]);
                         if (FIRSTindex != -1 && SECONDindex != -1)
                         {
-                            string? result = lista[FIRSTindex].SumValueRefered(lista[SECONDindex]);
-                            if (result == null)
+                            switch (parts[0].ToUpper())
                             {
-                                Console.WriteLine("Error: Variable not found.");
-                            }
-                            else
-                            {
-                                Console.WriteLine(result);
-                            }
-                        }
+                                case "SUM":
+                                    lista[FIRSTindex].SumValueRefered(lista[SECONDindex]);
+                                    Console.WriteLine($"Value at index {FIRSTindex} increased by value at index {SECONDindex}");
+                                    break;
+                                case "SUBTRACT":
+                                    lista[FIRSTindex].SubtractValueRefered(lista[SECONDindex]);
+                                    Console.WriteLine($"Value at index {FIRSTindex} decreased by value at index {SECONDindex}");
+                                    break;
+                                case "MULTIPLY":
+                                    lista[FIRSTindex].MultiplyValueRefered(lista[SECONDindex]);
+                                    Console.WriteLine($"Value at index {FIRSTindex} multiplied by value at index {SECONDindex}");
+                                    break;
+                                case "DIVIDE":
+                                    if (lista[SECONDindex].GetValue() != 0)
+                                    {
+                                        lista[FIRSTindex].DivideValueRefered(lista[SECONDindex]);
+                                        Console.WriteLine($"Value at index {FIRSTindex} divided by value at index {SECONDindex}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Cannot divide by zero.");
+                                    }
+                                    break;
+                                default:
+                                    Console.WriteLine("Unknown command.");
+                                    break;
+                        }}
                         else
                         {
                             Console.WriteLine("Invalid index.");
                                 Console.WriteLine("Error: Variable not found.");
                         }
-                        }
-                        
+                        continue;
                     }
-                else
+                    else
+                    {
+                        Console.WriteLine("Invalid index.");
+                    }
+                }else
                 {
                     Console.WriteLine("Invalid command or parameters.");
                 }
